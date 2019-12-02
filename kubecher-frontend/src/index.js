@@ -67,11 +67,15 @@ class Board extends React.Component {
       );
     }
 
-    retrive(){
+    retrive() {
+      if(this.state.history.length <= 1){
+        return
+      }
       const history = this.state.history
-      const lastStep = history.pop()
-      this.setState({hisotry: hisotry})
-      
+      history.pop()
+      const lastStep = history.slice(-1)
+      const current = this.state.current === 'O'?'X':'O'
+      this.setState({squares: {...lastStep}[0], history: history, current: current})
     }
   
     render() {
@@ -87,7 +91,7 @@ class Board extends React.Component {
 
       return (
         <div>
-          <button onClick={this.retrive}> retrive </button> 
+          <button onClick={()=>this.retrive()}> retrive </button> 
           <div className="status">{status}</div>
           <div className="board-row">
             {this.renderSquare(0)}

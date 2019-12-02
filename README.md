@@ -15,7 +15,7 @@ body:
     "version": "1",
     "replicas": "1",
     "namespace": "cmdb",
-    "image": "ops-reg.jccfc.com/ops/learn-docker:1.2",
+    "image": "nginx:1.2",
     "command": [],
     "args": [],
     "lebel":{"cmdb":"enable"},

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Menu, Dropdown, Button, Icon, message } from "antd";
+import { GetNamespaces } from "./ajax";
 
 function handleMenuClick(e) {
   message.info("Click on menu item.");
@@ -8,49 +9,43 @@ function handleMenuClick(e) {
 
 class NamespacesDropdown extends Component {
   constructor(props) {
-    this.renderDropdown = this.renderDropdown.bind(this);
-
     super(props);
+
+    this.renderDropdown = this.renderDropdown.bind(this);
     this.state = {
       namespaces: []
     };
   }
 
   renderDropdown() {
-    retrun(
+    console.log("render Dropdown");
+    return (
       <Menu onClick={handleMenuClick}>
-        {
-          for (let [index, val] of this.state.namespaces.entries()) {
-            console.log(index, val);
-          }
-        }
-        {/* <Menu.Item key="1">1st menu item</Menu.Item>
-        <Menu.Item key="2">2nd menu item</Menu.Item>
-        <Menu.Item key="3">3rd item</Menu.Item> */}
+        {this.state.namespaces.map((item, index) => {
+          console.log(this.state.namespaces);
+          return <Menu.Item key={index}>{item}</Menu.Item>;
+        })}
       </Menu>
     );
   }
 
   componentDidMount() {
-    // this.fetch();
-    fetch("/api/namespace")
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data)
-        data.forEach(item => {
-          const namespaces = this.state.namespaces;
-          namespaces.push(item.Name);
-          this.setState({ namespaces: namespaces });
-        });
+    GetNamespaces().then(data => {
+      data.forEach(item => {
+        const namespaces = this.state.namespaces;
+        namespaces.push(item.Name);
+        this.setState({ namespaces: namespaces });
       });
+    });
   }
 
   render() {
+    console.log("render");
     return (
       <div id="components-dropdown-demo-dropdown-button">
-        <Dropdown overlay={menu}>
+        <Dropdown overlay={this.renderDropdown()}>
           <Button>
-            Button <Icon type="down" />
+            {this.state.Namespace?this.state.Namespace[0]:""} <Icon type="down" />
           </Button>
         </Dropdown>
       </div>

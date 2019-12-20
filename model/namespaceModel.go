@@ -1,8 +1,8 @@
 package model
 
 type Namespace struct{
-		Name string
-		Labels map[string]string
-		Annotations map[string]string
-		Status string
+	Name string `json:"name"`
+	Labels map[string]string `json:"labels,omitempty"`
+	Annotations map[string]string `json:"annotations,omitempty"`
+	Status string `json:"status,omitempty"`
 }

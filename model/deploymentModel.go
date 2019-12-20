@@ -18,9 +18,9 @@ type DeploymentArgs struct{
 
 
 
-type Deployment struct{
-	Name string `json:"appname"`
-	Namespace string `json:"namespace"`
-	Labels map[string]string `json:"lebel"`
-	Replicas string `json:"replicas"`
-}
+//type Deployment struct{
+//	Name string `json:"appname"`
+//	Namespace string `json:"namespace"`
+//	Labels map[string]string `json:"lebel"`
+//	Replicas string `json:"replicas"`
+//}

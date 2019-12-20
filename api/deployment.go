@@ -15,13 +15,20 @@ import (
 		corev1 "k8s.io/api/core/v1"
 )
 
+
+func GetDeployment(c *gin.Context){
+	namespace := c.Query("namespace")
+	result := GetDeployments(namespace, "")
+	c.JSON(200, result)
+}
+
 func Deployment(c *gin.Context) {
 	var deploymentArgs model.DeploymentArgs
 	err := c.BindJSON(&deploymentArgs)
 	if err != nil {
 		panic(err.Error())
 	}else{
-		deploymentClient := deploymentClient(deploymentArgs.Namespace) //获取client
+		deploymentClient := getDeploymentClient(deploymentArgs.Namespace) //获取client
 		existDeploy := GetDeployments(deploymentArgs.Namespace, deploymentArgs.Appname)
 		if len(existDeploy) != 0 {
 			c.String(200, fmt.Sprintf("Deployment %s already exists in %s namespace", deploymentArgs.Appname, deploymentArgs.Namespace))
@@ -58,7 +65,7 @@ func GetDeployments (namespace string, deployName string) []appsv1.Deployment {
 }
 
 
-func deploymentClient(namespace string) v1.DeploymentInterface {
+func getDeploymentClient(namespace string) v1.DeploymentInterface {
 		clientSet := GetK8sClient()
 		deploymentClient := clientSet.AppsV1().Deployments(namespace)
 		return deploymentClient

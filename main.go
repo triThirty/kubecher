@@ -10,10 +10,11 @@ func main() {
 		// logger and recovery (crash-free) middleware
 		router := gin.Default()
 		
-		router.GET("/node", api.GetNodeList)
-		router.GET("/namespace", api.GetNamespacesList)
-		router.POST("/deployment", api.Deployment)
-		//router.PUT("/somePut", putting)
+		router.GET("api/node", api.GetNodeList)
+		router.GET("api/namespace", api.GetNamespacesList)
+		router.GET("api/deployment", api.GetDeployment)
+		router.POST("api/deployment", api.Deployment)
+		router.GET("api/pod", api.GetPodsByNamespaces)
 		//router.DELETE("/someDelete", deleting)
 		//router.PATCH("/somePatch", patching)
 		//router.HEAD("/someHead", head)

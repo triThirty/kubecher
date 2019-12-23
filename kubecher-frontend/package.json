@@ -6,6 +6,8 @@
     "antd": "^3.26.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "reqwest": "^2.0.5"
   },

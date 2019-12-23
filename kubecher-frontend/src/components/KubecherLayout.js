@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Link } from "react";
 import { Layout, Menu } from "antd";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import NamespacesDropdown from "./Dropdown";
 import { GetPodsByNamespaces, GetDeploymentByNamespaces } from "./ajax";
@@ -16,6 +17,7 @@ class KubecherLayout extends Component {
     this.setNamespace = this.setNamespace.bind(this);
     this.MenuSelected = this.MenuSelected.bind(this);
     this.queryData = this.queryData.bind(this);
+    this.MenuItemClicked = this.MenuItemClicked.bind(this);
     this.state = {
       namespace: "default",
       selectedMenuItem: "Pods",
@@ -31,13 +33,10 @@ class KubecherLayout extends Component {
 
   queryData() {
     const resourceName = this.state.selectedMenuItem;
+    console.log("resourceName:", resourceName);
     switch (resourceName) {
       case "Pods":
-        // GetPodsByNamespaces(this.state.namespace).then(data => {
-        //   this.setState({ data: data });
-        // });
-
-        GetDeploymentByNamespaces(this.state.namespace).then(data => {
+        GetPodsByNamespaces(this.state.namespace).then(data => {
           this.setState({ data: data });
         });
         break;
@@ -48,7 +47,9 @@ class KubecherLayout extends Component {
         console.log(resourceName);
         break;
       case "Deployment":
-        console.log(resourceName);
+        GetDeploymentByNamespaces(this.state.namespace).then(data => {
+          this.setState({ data: data });
+        });
         break;
       case "StatefulSet":
         console.log(resourceName);
@@ -59,10 +60,23 @@ class KubecherLayout extends Component {
   }
 
   MenuSelected(menu) {
+    // console.log(this.state.data);
+    // const selectedMenuItem = menu.item.props.children;
+    // this.setState({ selectedMenuItem: selectedMenuItem }, () => {
+    //   this.queryData();
+    // });
+  }
+
+  MenuItemClicked(menu) {
+    console.log("namespace:", this.state.namespace);
+    console.log("selectedMenuItem:", this.state.selectedMenuItem);
+    console.log("data:", this.state.data);
     const selectedMenuItem = menu.item.props.children;
     this.setState({ selectedMenuItem: selectedMenuItem }, () => {
       this.queryData();
     });
+    const uri = menu.item.props.children;
+    window.location.href = `/${uri}`;
   }
 
   render() {
@@ -80,19 +94,32 @@ class KubecherLayout extends Component {
               <Menu
                 mode="inline"
                 style={{ height: "100%" }}
-                defaultSelectedKeys={["1"]}
-                onSelect={this.MenuSelected}
+                // defaultSelectedKeys={["1"]}
+                // onSelect={this.MenuSelected}
+                onClick={this.MenuItemClicked}
               >
-                <Menu.Item key="1">Pods</Menu.Item>
+                <Menu.Item key="1">
+                  <a href="Pods">Pods</a>
+                </Menu.Item>
                 <Menu.Item key="2">Secrets</Menu.Item>
                 <Menu.Item key="3">Configmap</Menu.Item>
-                <Menu.Item key="4">Deployment</Menu.Item>
+                <Menu.Item key="4">
+                  <a href="Deployment">Deployment</a>
+                </Menu.Item>
                 <Menu.Item key="5">StatefulSet</Menu.Item>
               </Menu>
             </Sider>
             <Content style={{ padding: "0 24px", minHeight: 280 }}>
-              {/* <PodTable PodData={this.state.data} /> */}
-              <DeploymentTable DeploymentData={this.state.data} />
+              <Router>
+                <Switch>
+                  <Route path="/Pods">
+                    <PodTable PodData={this.state.data} />
+                  </Route>
+                  <Route path="/Deployment">
+                    <DeploymentTable DeploymentData={this.state.data} />
+                  </Route>
+                </Switch>
+              </Router>
             </Content>
           </Layout>
         </Content>

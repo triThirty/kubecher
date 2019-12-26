@@ -1,6 +1,6 @@
-import React, { Component, Link } from "react";
+import React, { Component } from "react";
 import { Layout, Menu } from "antd";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, NavLink } from "react-router-dom";
 
 import NamespacesDropdown from "./Dropdown";
 import { GetPodsByNamespaces, GetDeploymentByNamespaces } from "./ajax";
@@ -15,14 +15,18 @@ class KubecherLayout extends Component {
     super(props);
 
     this.setNamespace = this.setNamespace.bind(this);
-    this.MenuSelected = this.MenuSelected.bind(this);
     this.queryData = this.queryData.bind(this);
     this.MenuItemClicked = this.MenuItemClicked.bind(this);
     this.state = {
       namespace: "default",
       selectedMenuItem: "Pods",
-      data: []
+      data: [],
+      currentSelectedMenuItem: "1"
     };
+  }
+  componentDidMount() {
+    this.queryData();
+    window.location.href = "/#/Pods";
   }
 
   setNamespace(namespace) {
@@ -33,7 +37,6 @@ class KubecherLayout extends Component {
 
   queryData() {
     const resourceName = this.state.selectedMenuItem;
-    console.log("resourceName:", resourceName);
     switch (resourceName) {
       case "Pods":
         GetPodsByNamespaces(this.state.namespace).then(data => {
@@ -59,24 +62,19 @@ class KubecherLayout extends Component {
     }
   }
 
-  MenuSelected(menu) {
-    // console.log(this.state.data);
-    // const selectedMenuItem = menu.item.props.children;
-    // this.setState({ selectedMenuItem: selectedMenuItem }, () => {
-    //   this.queryData();
-    // });
-  }
-
   MenuItemClicked(menu) {
-    console.log("namespace:", this.state.namespace);
-    console.log("selectedMenuItem:", this.state.selectedMenuItem);
-    console.log("data:", this.state.data);
-    const selectedMenuItem = menu.item.props.children;
-    this.setState({ selectedMenuItem: selectedMenuItem }, () => {
-      this.queryData();
-    });
-    const uri = menu.item.props.children;
-    window.location.href = `/${uri}`;
+    const selectedMenuItem = menu.item.props.children.props.children;
+    const selectedMenuItemKey = menu.key;
+    this.setState(
+      {
+        selectedMenuItem: selectedMenuItem,
+        currentSelectedMenuItem: selectedMenuItemKey,
+        data: []
+      },
+      () => {
+        this.queryData();
+      }
+    );
   }
 
   render() {
@@ -90,37 +88,34 @@ class KubecherLayout extends Component {
         </Header>
         <Content style={{ padding: "0 50px" }}>
           <Layout style={{ padding: "24px 0", background: "#fff" }}>
-            <Sider width={200} style={{ background: "#fff" }}>
-              <Menu
-                mode="inline"
-                style={{ height: "100%" }}
-                // defaultSelectedKeys={["1"]}
-                // onSelect={this.MenuSelected}
-                onClick={this.MenuItemClicked}
-              >
-                <Menu.Item key="1">
-                  <a href="Pods">Pods</a>
-                </Menu.Item>
-                <Menu.Item key="2">Secrets</Menu.Item>
-                <Menu.Item key="3">Configmap</Menu.Item>
-                <Menu.Item key="4">
-                  <a href="Deployment">Deployment</a>
-                </Menu.Item>
-                <Menu.Item key="5">StatefulSet</Menu.Item>
-              </Menu>
-            </Sider>
-            <Content style={{ padding: "0 24px", minHeight: 280 }}>
-              <Router>
-                <Switch>
-                  <Route path="/Pods">
-                    <PodTable PodData={this.state.data} />
-                  </Route>
-                  <Route path="/Deployment">
-                    <DeploymentTable DeploymentData={this.state.data} />
-                  </Route>
-                </Switch>
-              </Router>
-            </Content>
+            <Router>
+              <Sider width={200} style={{ background: "#fff" }}>
+                <Menu
+                  mode="inline"
+                  style={{ height: "100%" }}
+                  selectedKeys={[this.state.currentSelectedMenuItem]}
+                  onClick={this.MenuItemClicked}
+                >
+                  <Menu.Item key="1">
+                    <NavLink to="Pods">Pods</NavLink>
+                  </Menu.Item>
+                  <Menu.Item key="2">Secrets</Menu.Item>
+                  <Menu.Item key="3">Configmap</Menu.Item>
+                  <Menu.Item key="4">
+                    <NavLink to="Deployment">Deployment</NavLink>
+                  </Menu.Item>
+                  <Menu.Item key="5">StatefulSet</Menu.Item>
+                </Menu>
+              </Sider>
+              <Content style={{ padding: "0 24px", minHeight: 280 }}>
+                <Route path="/Pods">
+                  <PodTable PodData={this.state.data} />
+                </Route>
+                <Route path="/Deployment">
+                  <DeploymentTable DeploymentData={this.state.data} />
+                </Route>
+              </Content>
+            </Router>
           </Layout>
         </Content>
         <Footer style={{ textAlign: "center" }}>Text</Footer>

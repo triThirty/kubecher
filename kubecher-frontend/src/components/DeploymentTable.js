@@ -1,14 +1,25 @@
-import { Table, Tag } from "antd";
+import { Table, Tag, Button } from "antd";
 import React from "react";
 
 import ReactJsonView from "./JsonPanel";
+import YamlForm from "./YamlForm";
+
+// import yaml from "js-yaml";
 
 class DeploymentTable extends React.Component {
   constructor(props) {
     super(props);
     this.expandedRowRender = this.expandedRowRender.bind(this);
+    this.editYaml = this.editYaml.bind(this);
   }
+
+  editYaml(e) {
+    console.log(e);
+  }
+
   expandedRowRender(record, index, indent, expanded) {
+    // console.log(this.props.DeploymentData[index]);
+    // console.log(yaml.dump(this.props.DeploymentData[index]));
     return <ReactJsonView Data={this.props.DeploymentData[index].spec} />;
   }
 
@@ -19,6 +30,7 @@ class DeploymentTable extends React.Component {
       for (let k in item.spec.selector.matchLabels) {
         labels.push(
           <Tag
+            style={{ marginTop: 9 }}
             color="gray"
             key={k}
           >{`${k} = ${item.spec.selector.matchLabels[k]}`}</Tag>
@@ -39,20 +51,38 @@ class DeploymentTable extends React.Component {
     const columns = [
       { title: "名称", dataIndex: "name", key: "name" },
       { title: "Ready", dataIndex: "ready", key: "ready" },
-      { title: "Selector", dataIndex: "labels", key: "labels" },
+      {
+        title: "Selector",
+        dataIndex: "labels",
+        key: "labels",
+        width: 600
+      },
       {
         title: "创建时间",
         dataIndex: "creationTimestamp",
         key: "creationTimestamp"
+      },
+      {
+        title: "Action",
+        dataIndex: "",
+        key: "x",
+        render: () => (
+          <Button type="primary" onClick={this.editYaml}>
+            编辑
+          </Button>
+        )
       }
     ];
     return (
-      <Table
-        className="components-table-demo-nested"
-        columns={columns}
-        expandedRowRender={this.expandedRowRender}
-        dataSource={this.renderTable(this.props.DeploymentData)}
-      />
+      <div>
+        <YamlForm />
+        <Table
+          className="components-table-demo-nested"
+          columns={columns}
+          expandedRowRender={this.expandedRowRender}
+          dataSource={this.renderTable(this.props.DeploymentData)}
+        />
+      </div>
     );
   }
 }

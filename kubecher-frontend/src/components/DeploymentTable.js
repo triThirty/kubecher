@@ -11,10 +11,13 @@ class DeploymentTable extends React.Component {
     super(props);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.editYaml = this.editYaml.bind(this);
+    this.state = {
+      yamlDate: {}
+    };
   }
 
-  editYaml(e) {
-    console.log(e);
+  editYaml(deploymentName) {
+    // console.log(deploymentName);
   }
 
   expandedRowRender(record, index, indent, expanded) {
@@ -66,11 +69,18 @@ class DeploymentTable extends React.Component {
         title: "Action",
         dataIndex: "",
         key: "x",
-        render: () => (
-          <Button type="primary" onClick={this.editYaml}>
-            编辑
-          </Button>
-        )
+        render: (text, row, index) => {
+          return (
+            <Button
+              type="primary"
+              onClick={() => {
+                this.editYaml(row);
+              }}
+            >
+              编辑
+            </Button>
+          );
+        }
       }
     ];
     return (

@@ -2,27 +2,34 @@ import { Table, Tag, Button } from "antd";
 import React from "react";
 
 import ReactJsonView from "./JsonPanel";
-import YamlForm from "./YamlForm";
+import YamlModal from "./YamlModal";
 
-// import yaml from "js-yaml";
+import yaml from "js-yaml";
 
 class DeploymentTable extends React.Component {
   constructor(props) {
     super(props);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.editYaml = this.editYaml.bind(this);
+    this.switchYamlFormVisible = this.switchYamlFormVisible.bind(this);
     this.state = {
-      yamlDate: {}
+      yamlDate: "",
+      EditFormShow: false
     };
   }
 
-  editYaml(deploymentName) {
-    // console.log(deploymentName);
+  editYaml(index) {
+    this.setState({
+      EditFormShow: true,
+      yamlData: yaml.dump(this.props.DeploymentData[index], 4, 4)
+    });
+  }
+
+  switchYamlFormVisible() {
+    this.setState({ EditFormShow: this.state.EditFormShow ? false : true });
   }
 
   expandedRowRender(record, index, indent, expanded) {
-    // console.log(this.props.DeploymentData[index]);
-    // console.log(yaml.dump(this.props.DeploymentData[index]));
     return <ReactJsonView Data={this.props.DeploymentData[index].spec} />;
   }
 
@@ -74,7 +81,7 @@ class DeploymentTable extends React.Component {
             <Button
               type="primary"
               onClick={() => {
-                this.editYaml(row);
+                this.editYaml(index);
               }}
             >
               编辑
@@ -85,7 +92,11 @@ class DeploymentTable extends React.Component {
     ];
     return (
       <div>
-        <YamlForm />
+        <YamlModal
+          show={this.state.EditFormShow}
+          switchYamlFormVisible={this.switchYamlFormVisible}
+          yamlData={this.state.yamlData}
+        />
         <Table
           className="components-table-demo-nested"
           columns={columns}

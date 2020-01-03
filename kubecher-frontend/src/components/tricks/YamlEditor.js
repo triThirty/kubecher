@@ -1,4 +1,5 @@
 import React from "react";
+
 import CodeMirror from "@uiw/react-codemirror";
 import "codemirror/keymap/sublime";
 import "codemirror/theme/monokai.css";
@@ -6,20 +7,17 @@ import "codemirror/theme/monokai.css";
 class YamlEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      yaml: ""
-    };
+    this.updateCode = this.updateCode.bind(this);
   }
 
-  componentDidMount() {
-    console.log(this.props.yamlData);
-    this.setState({ yaml: this.props.yamlData });
+  updateCode(editor, value) {
+    this.props.codeUpdate(editor.getValue());
   }
 
   render() {
     return (
       <CodeMirror
-        value={this.state.yaml}
+        value={this.props.yamlData}
         options={{
           theme: "monokai",
           keyMap: "sublime",
@@ -27,6 +25,7 @@ class YamlEditor extends React.Component {
           lineNumbers: true,
           lineWrapping: true
         }}
+        onChange={this.updateCode}
       />
     );
   }

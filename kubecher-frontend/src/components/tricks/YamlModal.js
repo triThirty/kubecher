@@ -8,14 +8,25 @@ class YamlModal extends React.Component {
     super(props);
     this.handleOk = this.handleOk.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.onYamlChange = this.onYamlChange.bind(this);
+    this.state = { yaml: "" };
+  }
+
+  componentDidMount() {
+    this.setState({ yaml: this.props.yamlData });
+  }
+
+  onYamlChange(yamlData) {
+    this.setState({ yaml: yamlData });
   }
 
   handleOk(e) {
-    this.props.switchYamlFormVisible();
+    this.setState({ yaml: this.props.yamlData });
   }
 
   handleCancel(e) {
     this.props.switchYamlFormVisible();
+    this.setState({ yaml: "" });
   }
 
   render() {
@@ -30,7 +41,10 @@ class YamlModal extends React.Component {
           closable={false}
           width="full"
         >
-          <YamlEditor yamlData={this.props.yamlData} />
+          <YamlEditor
+            yamlData={this.props.yamlData}
+            codeUpdate={this.onYamlChange}
+          />
         </Modal>
       </div>
     );

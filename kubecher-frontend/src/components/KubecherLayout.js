@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Layout, Menu } from "antd";
 import { HashRouter as Router, Route, NavLink } from "react-router-dom";
 
-import NamespacesDropdown from "./Dropdown";
-import { GetPodsByNamespaces, GetDeploymentByNamespaces } from "./ajax";
+import NamespacesDropdown from "./tricks/Dropdown";
+import { GetPodsByNamespaces, GetDeploymentByNamespaces } from "./tricks/ajax";
 
-import PodTable from "./PodTable";
-import DeploymentTable from "./DeploymentTable";
+import PodTable from "./k8sResource/PodTable";
+import DeploymentTable from "./k8sResource/DeploymentTable";
 
 const { Header, Content, Footer, Sider } = Layout;
 

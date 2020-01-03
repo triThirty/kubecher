@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import React from "react";
 
-import ReactJsonView from "./JsonPanel";
+import ReactJsonView from "../tricks/JsonPanel";
 
 class PodTable extends React.Component {
   constructor(props) {

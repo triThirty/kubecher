@@ -5,3 +5,14 @@
   margin: 16px 24px 16px 0;
   float: left;
 }
+
+.CodeMirror {
+  height: 80vh !important;
+}
+
+.ant-layout.ant-layout-has-sider {
+  height: 85vh !important;
+}
+.ant-table-placeholder {
+  height: 74.5vh !important;
+}

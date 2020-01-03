@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@uiw/react-codemirror": "^2.0.0",
+    "@uiw/react-codemirror": "^2.0.1",
     "antd": "^3.26.3",
     "js-yaml": "^3.13.1",
     "react": "^16.12.0",

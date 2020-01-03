@@ -1,8 +1,8 @@
 import { Table, Tag, Button } from "antd";
 import React from "react";
 
-import ReactJsonView from "./JsonPanel";
-import YamlModal from "./YamlModal";
+import ReactJsonView from "../tricks/JsonPanel";
+import YamlModal from "../tricks/YamlModal";
 
 import yaml from "js-yaml";
 
@@ -21,7 +21,7 @@ class DeploymentTable extends React.Component {
   editYaml(index) {
     this.setState({
       EditFormShow: true,
-      yamlData: yaml.dump(this.props.DeploymentData[index], 4, 4)
+      yamlData: yaml.dump(this.props.DeploymentData[index])
     });
   }
 

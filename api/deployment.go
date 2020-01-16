@@ -6,10 +6,11 @@ import (
 		"strings"
 
 		"kubecher/model"
-		//"kubecher/util"
 
 		"github.com/gin-gonic/gin"
 		"k8s.io/client-go/kubernetes/typed/apps/v1"
+		"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+		"k8s.io/apimachinery/pkg/runtime"
 		appsv1 "k8s.io/api/apps/v1"
 		metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 		corev1 "k8s.io/api/core/v1"
@@ -18,8 +19,45 @@ import (
 
 func GetDeployment(c *gin.Context){
 	namespace := c.Query("namespace")
-	result := GetDeployments(namespace, "")
+	deployment := c.Query("deployment")
+	result := GetDeployments(namespace, deployment)
 	c.JSON(200, result)
+}
+
+
+func UpdateDeployment(c *gin.Context){
+	rawData, _ := c.GetRawData()
+	var yaml unstructured.Unstructured
+	err := yaml.UnmarshalJSON(rawData)
+	if err != nil {
+		panic(err.Error())
+	}
+	outBytes, err := runtime.Encode(unstructured.UnstructuredJSONScheme, &yaml)
+
+	clientset := GetK8sClient()
+	restClient := clientset.AppsV1().RESTClient()
+	result := restClient.Verb("PUT").
+		Namespace(yaml.Object["metadata"].(map[string]interface{})["namespace"].(string)).
+		Resource("deployments").
+		Name(yaml.Object["metadata"].(map[string]interface{})["name"].(string)).
+		Body(outBytes).
+		Do()
+
+	if err := result.Error(); err != nil {
+		panic(err.Error())
+	}
+
+	retBytes, err := result.Raw()
+	if err != nil {
+		panic(err.Error())
+	}
+	uncastObj, err := runtime.Decode(unstructured.UnstructuredJSONScheme, retBytes)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Printf("%s", uncastObj)
+	c.JSON(200, nil)
 }
 
 func Deployment(c *gin.Context) {
@@ -49,17 +87,26 @@ func Deployment(c *gin.Context) {
 //如果要获取全部deployment，参数传递空字符串""
 func GetDeployments (namespace string, deployName string) []appsv1.Deployment {
 	clientSet := GetK8sClient()
-	deploymentList, _ := clientSet.AppsV1().Deployments(namespace).List(metav1.ListOptions{})
+	deployments := clientSet.AppsV1().Deployments(namespace)
 	if deployName == "" {
+		deploymentList,_ := deployments.List(metav1.ListOptions{})
 		return deploymentList.Items
 	}else{
-		for _, v := range deploymentList.Items {
-			if v.Name == deployName {
-				return []appsv1.Deployment{v}
-			}else{
-				continue
-			}
-		}
+
+		restClient := clientSet.AppsV1().RESTClient()
+		result := restClient.Verb("GET").
+			Namespace(namespace).
+			Resource("deployments").
+			Name(deployName).
+			Do()
+		bytes, _ := result.Raw()
+		var deploymentObj unstructured.Unstructured
+		deploymentObj.UnmarshalJSON(bytes)
+
+		deployment, _ := deployments.Get(deployName, metav1.GetOptions{})
+		deployment.Kind = deploymentObj.Object["kind"].(string)
+		deployment.APIVersion = deploymentObj.Object["apiVersion"].(string)
+		return []appsv1.Deployment{*deployment}
 	}
 	return []appsv1.Deployment{}
 }
@@ -96,7 +143,6 @@ func create_deploytment(deploymentArgs model.DeploymentArgs) *appsv1.Deployment 
 						},
 				},
 		}
-		//util.Struct2JSON_Print(deploy)
 		return deploy
 }
 

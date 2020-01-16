@@ -2,14 +2,26 @@ package api
 
 import (
 	"testing"
-	"kubecher/util"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	//"k8s.io/apimachinery/pkg/runtime"
+	"fmt"
 )
 
 func TestHelloWorld(t *testing.T) {
-	//t.Log(GetDeployments("123"))
-	//GetDeployments("cmdb")
-	//GetDeployments("cmdb", "learn-nginx")
-	result := string(util.Struct2JSON_Print(GetDeployments("cmdb", "cmdb")))
-	t.Log(result)
-	//t.Log("233")
+	clientset := GetK8sClient()
+	restClient := clientset.AppsV1().RESTClient()
+	result := restClient.Verb("GET").
+	    Namespace("cmdb").
+		Resource("deployments").
+		Name("cmdb").
+	    Do()
+	bytes, _ := result.Raw()
+	var obj unstructured.Unstructured
+	obj.UnmarshalJSON(bytes)
+	//outBytes, err := runtime.Encode(unstructured.UnstructuredJSONScheme, obj)
+
+	fmt.Printf("%s", obj.Object["metadata"].(map[string]interface{})["name"])
+
+	//result := GetDeployments("cmdb", "cmdb")
+	//fmt.Println(result)
 }

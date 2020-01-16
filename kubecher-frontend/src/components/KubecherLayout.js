@@ -3,7 +3,7 @@ import { Layout, Menu } from "antd";
 import { HashRouter as Router, Route, NavLink } from "react-router-dom";
 
 import NamespacesDropdown from "./tricks/Dropdown";
-import { GetPodsByNamespaces, GetDeploymentByNamespaces } from "./tricks/ajax";
+import { GetPodsByNamespaces, GetDeploymentByNamespace } from "./tricks/ajax";
 
 import PodTable from "./k8sResource/PodTable";
 import DeploymentTable from "./k8sResource/DeploymentTable";
@@ -50,7 +50,7 @@ class KubecherLayout extends Component {
         console.log(resourceName);
         break;
       case "Deployment":
-        GetDeploymentByNamespaces(this.state.namespace).then(data => {
+        GetDeploymentByNamespace(this.state.namespace, "").then(data => {
           this.setState({ data: data });
         });
         break;

@@ -8,18 +8,29 @@ function GetPodsByNamespaces(namespace) {
   );
 }
 
-function GetDeploymentByNamespaces(namespace) {
-  return fetch(`/api/deployment?namespace=${namespace}`).then(response =>
+function GetDeploymentByNamespace(namespace, deployment) {
+  return fetch(
+    `/api/deployment?namespace=${namespace}&deployment=${deployment}`
+  ).then(response => response.json());
+}
+
+function PutDeployment(body) {
+  return fetch("/api/deployment", fetchOps("PUT", {}, body)).then(response =>
     response.json()
   );
 }
 
-// function fetchOps(method = "GET", headers = {}, body = {}) {
-//   return {
-//     method: method,
-//     headers: headers,
-//     body: JSON.stringify(body)
-//   };
-// }
+function fetchOps(method = "GET", headers = {}, body = {}) {
+  return {
+    method: method,
+    headers: headers,
+    body: body
+  };
+}
 
-export { GetNamespaces, GetPodsByNamespaces, GetDeploymentByNamespaces };
+export {
+  GetNamespaces,
+  GetPodsByNamespaces,
+  GetDeploymentByNamespace,
+  PutDeployment
+};

@@ -2,6 +2,9 @@ import { Modal } from "antd";
 import React from "react";
 
 import YamlEditor from "./YamlEditor";
+import { PutDeployment } from "./ajax";
+
+import yaml from "js-yaml";
 
 class YamlModal extends React.Component {
   constructor(props) {
@@ -22,6 +25,8 @@ class YamlModal extends React.Component {
 
   handleOk(e) {
     this.setState({ yaml: this.props.yamlData });
+    let json = JSON.stringify(yaml.load(this.state.yaml), null, 2);
+    PutDeployment(json);
   }
 
   handleCancel(e) {

@@ -3,6 +3,7 @@ import React from "react";
 
 import ReactJsonView from "../tricks/JsonPanel";
 import YamlModal from "../tricks/YamlModal";
+import { GetDeploymentByNamespace } from "../tricks/ajax";
 
 import yaml from "js-yaml";
 
@@ -19,9 +20,12 @@ class DeploymentTable extends React.Component {
   }
 
   editYaml(index) {
-    this.setState({
-      EditFormShow: true,
-      yamlData: yaml.dump(this.props.DeploymentData[index])
+    const metadata = this.props.DeploymentData[index].metadata;
+    GetDeploymentByNamespace(metadata.namespace, metadata.name).then(data => {
+      this.setState({
+        EditFormShow: true,
+        yamlData: yaml.safeDump(data[0])
+      });
     });
   }
 

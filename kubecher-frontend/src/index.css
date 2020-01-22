@@ -10,6 +10,10 @@
   height: 80vh !important;
 }
 
+.DesribeCodeMirror .CodeMirror {
+  height: 40vh !important;
+}
+
 .ant-layout.ant-layout-has-sider {
   height: 85vh !important;
 }

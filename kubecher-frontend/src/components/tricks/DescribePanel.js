@@ -7,17 +7,18 @@ import "codemirror/theme/monokai.css";
 class DescribePanel extends React.Component {
   render() {
     return (
-      <CodeMirror
-        value={this.props.DescribeData}
-        height="100%"
-        options={{
-          readOnly: true,
-          theme: "monokai",
-          mode: "text",
-          lineNumbers: true,
-          lineWrapping: true
-        }}
-      />
+      <div className="DesribeCodeMirror">
+        <CodeMirror
+          value={this.props.DescribeData}
+          options={{
+            readOnly: true,
+            theme: "monokai",
+            mode: "text",
+            lineNumbers: true,
+            lineWrapping: true
+          }}
+        />
+      </div>
     );
   }
 }

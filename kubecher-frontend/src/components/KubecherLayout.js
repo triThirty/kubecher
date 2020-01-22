@@ -112,7 +112,10 @@ class KubecherLayout extends Component {
                   <PodTable PodData={this.state.data} />
                 </Route>
                 <Route path="/Deployment">
-                  <DeploymentTable DeploymentData={this.state.data} />
+                  <DeploymentTable
+                    DeploymentData={this.state.data}
+                    Namespace={this.state.namespace}
+                  />
                 </Route>
               </Content>
             </Router>

@@ -1,9 +1,13 @@
 import { Table, Tag, Button } from "antd";
 import React from "react";
 
-import ReactJsonView from "../tricks/JsonPanel";
+import DescribePanel from "../tricks/DescribePanel";
+
 import YamlModal from "../tricks/YamlModal";
-import { GetDeploymentByNamespace } from "../tricks/ajax";
+import {
+  GetDeploymentByNamespace,
+  GetDescribeDeploymentByNamespace
+} from "../tricks/ajax";
 
 import yaml from "js-yaml";
 
@@ -12,10 +16,12 @@ class DeploymentTable extends React.Component {
     super(props);
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.editYaml = this.editYaml.bind(this);
+    this.onExpand = this.onExpand.bind(this);
     this.switchYamlFormVisible = this.switchYamlFormVisible.bind(this);
     this.state = {
       yamlDate: "",
-      EditFormShow: false
+      EditFormShow: false,
+      describeData: {}
     };
   }
 
@@ -33,8 +39,18 @@ class DeploymentTable extends React.Component {
     this.setState({ EditFormShow: this.state.EditFormShow ? false : true });
   }
 
+  onExpand(expanded, record) {
+    GetDescribeDeploymentByNamespace(this.props.Namespace, record["name"]).then(
+      data => {
+        this.setState({
+          describeData: { ...this.state.describeData, [record.key]: data }
+        });
+      }
+    );
+  }
+
   expandedRowRender(record, index, indent, expanded) {
-    return <ReactJsonView Data={this.props.DeploymentData[index].spec} />;
+    return <DescribePanel DescribeData={this.state.describeData[index]} />;
   }
 
   renderTable(DeploymentData) {
@@ -104,6 +120,7 @@ class DeploymentTable extends React.Component {
         <Table
           className="components-table-demo-nested"
           columns={columns}
+          onExpand={this.onExpand}
           expandedRowRender={this.expandedRowRender}
           dataSource={this.renderTable(this.props.DeploymentData)}
         />

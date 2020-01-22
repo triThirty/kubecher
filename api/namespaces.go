@@ -12,7 +12,7 @@ func GetNamespacesList(c *gin.Context) {
 
 		result := []*model.Namespace{}
 
-		clientSet := GetK8sClient()
+		clientSet, _ := GetK8sClient()
 		namespaces, err := clientSet.CoreV1().Namespaces().List(metav1.ListOptions{})
 		if err != nil {
 				panic(err.Error())

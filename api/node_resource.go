@@ -14,7 +14,7 @@ import (
 func GetNodeList(c *gin.Context) {
 	result := []*model.Node{}
 
-	clientSet := GetK8sClient()
+	clientSet, _ := GetK8sClient()
 
 	nodes, err := clientSet.CoreV1().Nodes().List(metav1.ListOptions{})
 	if err != nil {

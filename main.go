@@ -15,7 +15,8 @@ func main() {
 		router.GET("api/namespace", api.GetNamespacesList)
 
 		router.GET("api/deployment", api.GetDeployment)
-		router.POST("api/deployment", api.Deployment)
+		router.GET("api/deployment/describe", api.GetDescribeDeployment)
+		router.POST("api/deployment", api.PostDeployment)
 		router.PUT("api/deployment", api.UpdateDeployment)
 
 		router.GET("api/pod", api.GetPodsByNamespaces)

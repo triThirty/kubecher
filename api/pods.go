@@ -10,7 +10,7 @@ func GetPodsByNamespaces(c *gin.Context) {
 	nameSpaceName := c.Query("namespace")
 
 	result := []v1.Pod{}
-	clientSet := GetK8sClient()
+	clientSet, _ := GetK8sClient()
 	pods, err := clientSet.CoreV1().Pods(nameSpaceName).List(metav1.ListOptions{})
 	if err != nil {
 		panic(err.Error())

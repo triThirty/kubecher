@@ -25,6 +25,18 @@ func GetDeployment(c *gin.Context){
 }
 
 
+func GetDescribeDeployment (c *gin.Context) {
+	namespace := c.Query("namespace")
+	deployment := c.Query("deployment")
+	result := GetDescribeDeployments(namespace, deployment)
+	c.String(200, result)
+}
+
+func GetDescribeDeployments (namespace string, deployName string) string {
+	result := DescribeResource(namespace, "deployment", deployName)
+	return result
+}
+
 func UpdateDeployment(c *gin.Context){
 	rawData, _ := c.GetRawData()
 	var yaml unstructured.Unstructured
@@ -34,7 +46,7 @@ func UpdateDeployment(c *gin.Context){
 	}
 	outBytes, err := runtime.Encode(unstructured.UnstructuredJSONScheme, &yaml)
 
-	clientset := GetK8sClient()
+	clientset, _ := GetK8sClient()
 	restClient := clientset.AppsV1().RESTClient()
 	result := restClient.Verb("PUT").
 		Namespace(yaml.Object["metadata"].(map[string]interface{})["namespace"].(string)).
@@ -60,7 +72,7 @@ func UpdateDeployment(c *gin.Context){
 	c.JSON(200, nil)
 }
 
-func Deployment(c *gin.Context) {
+func PostDeployment(c *gin.Context) {
 	var deploymentArgs model.DeploymentArgs
 	err := c.BindJSON(&deploymentArgs)
 	if err != nil {
@@ -86,7 +98,7 @@ func Deployment(c *gin.Context) {
 //获取集群内指定namespace下的deployment资源，
 //如果要获取全部deployment，参数传递空字符串""
 func GetDeployments (namespace string, deployName string) []appsv1.Deployment {
-	clientSet := GetK8sClient()
+	clientSet, _ := GetK8sClient()
 	deployments := clientSet.AppsV1().Deployments(namespace)
 	if deployName == "" {
 		deploymentList,_ := deployments.List(metav1.ListOptions{})
@@ -113,7 +125,7 @@ func GetDeployments (namespace string, deployName string) []appsv1.Deployment {
 
 
 func getDeploymentClient(namespace string) v1.DeploymentInterface {
-		clientSet := GetK8sClient()
+		clientSet, _ := GetK8sClient()
 		deploymentClient := clientSet.AppsV1().Deployments(namespace)
 		return deploymentClient
 }

@@ -25,6 +25,7 @@ class YamlModal extends React.Component {
 
   handleOk(e) {
     this.setState({ yaml: this.props.yamlData });
+    this.props.switchYamlFormVisible();
     let json = JSON.stringify(yaml.load(this.state.yaml), null, 2);
     PutDeployment(json);
   }

@@ -72,6 +72,40 @@ func UpdateDeployment(c *gin.Context){
 	c.JSON(200, nil)
 }
 
+func PostDeploymentByYAML(c *gin.Context){
+	rawData, _ := c.GetRawData()
+	var yaml unstructured.Unstructured
+	err := yaml.UnmarshalJSON(rawData)
+	if err != nil {
+		panic(err.Error())
+	}
+	outBytes, err := runtime.Encode(unstructured.UnstructuredJSONScheme, &yaml)
+
+	clientset, _ := GetK8sClient()
+	restClient := clientset.AppsV1().RESTClient()
+	result := restClient.Verb("POST").
+		Namespace(yaml.Object["metadata"].(map[string]interface{})["namespace"].(string)).
+		Resource("deployments").
+		Body(outBytes).
+		Do()
+
+	if err := result.Error(); err != nil {
+		panic(err.Error())
+	}
+
+	retBytes, err := result.Raw()
+	if err != nil {
+		panic(err.Error())
+	}
+	uncastObj, err := runtime.Decode(unstructured.UnstructuredJSONScheme, retBytes)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Printf("%s", uncastObj)
+	c.JSON(200, nil)
+}
+
 func PostDeployment(c *gin.Context) {
 	var deploymentArgs model.DeploymentArgs
 	err := c.BindJSON(&deploymentArgs)

@@ -17,6 +17,7 @@ func main() {
 		router.GET("api/deployment", api.GetDeployment)
 		router.GET("api/deployment/describe", api.GetDescribeDeployment)
 		router.POST("api/deployment", api.PostDeployment)
+		router.POST("api/deployment/yaml", api.PostDeploymentByYAML)
 		router.PUT("api/deployment", api.UpdateDeployment)
 
 		router.GET("api/pod", api.GetPodsByNamespaces)

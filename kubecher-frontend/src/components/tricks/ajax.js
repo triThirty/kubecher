@@ -26,6 +26,12 @@ function PutDeployment(body) {
   );
 }
 
+function PostDeploymentByYAML(body) {
+  return fetch("api/deployment/yaml", fetchOps("POST", {}, body)).then(response =>
+    response.json()
+  );
+}
+
 function fetchOps(method = "GET", headers = {}, body = {}) {
   return {
     method: method,
@@ -39,5 +45,6 @@ export {
   GetPodsByNamespaces,
   GetDeploymentByNamespace,
   PutDeployment,
-  GetDescribeDeploymentByNamespace
+  GetDescribeDeploymentByNamespace,
+  PostDeploymentByYAML
 };

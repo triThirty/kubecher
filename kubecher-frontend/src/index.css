@@ -14,6 +14,13 @@
   height: 40vh !important;
 }
 
+.add-deployment-modal .CodeMirror {
+  width: 100vh !important;
+}
+.ant-modal.add-deployment-modal{
+  width: 80vh !important;
+}
+
 .ant-layout.ant-layout-has-sider {
   height: 85vh !important;
 }

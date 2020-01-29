@@ -4,6 +4,8 @@ import React from "react";
 import DescribePanel from "../tricks/DescribePanel";
 
 import YamlModal from "../tricks/YamlModal";
+import AddButton from "../tricks/AddButton";
+import AddDeploymentModal from "../tricks/AddDeploymentModal";
 import {
   GetDeploymentByNamespace,
   GetDescribeDeploymentByNamespace
@@ -17,10 +19,13 @@ class DeploymentTable extends React.Component {
     this.expandedRowRender = this.expandedRowRender.bind(this);
     this.editYaml = this.editYaml.bind(this);
     this.onExpand = this.onExpand.bind(this);
+    this.showAddDeploymentModal = this.showAddDeploymentModal.bind(this);
     this.switchYamlFormVisible = this.switchYamlFormVisible.bind(this);
+    this.switchAddFormVisible = this.switchAddFormVisible.bind(this);
     this.state = {
       yamlDate: "",
       EditFormShow: false,
+      AddFormShow: false,
       describeData: {}
     };
   }
@@ -37,6 +42,14 @@ class DeploymentTable extends React.Component {
 
   switchYamlFormVisible() {
     this.setState({ EditFormShow: this.state.EditFormShow ? false : true });
+  }
+
+  switchAddFormVisible() {
+    this.setState({ AddFormShow: this.state.AddFormShow ? false : true });
+  }
+
+  showAddDeploymentModal(){
+    this.switchAddFormVisible();
   }
 
   onExpand(expanded, record) {
@@ -117,6 +130,12 @@ class DeploymentTable extends React.Component {
           switchYamlFormVisible={this.switchYamlFormVisible}
           yamlData={this.state.yamlData}
         />
+        <AddDeploymentModal
+          show={this.state.AddFormShow}
+          Namespace={this.props.Namespace}
+          switchAddFormVisible={this.switchAddFormVisible}
+        />
+        <AddButton Name="添加" Action={this.showAddDeploymentModal}/>
         <Table
           className="components-table-demo-nested"
           columns={columns}

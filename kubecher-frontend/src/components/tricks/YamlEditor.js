@@ -17,6 +17,7 @@ class YamlEditor extends React.Component {
   render() {
     return (
       <CodeMirror
+        className={this.props.className}
         value={this.props.yamlData}
         options={{
           theme: "monokai",

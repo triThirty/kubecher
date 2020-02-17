@@ -23,7 +23,7 @@ class DeploymentTable extends React.Component {
     this.switchYamlFormVisible = this.switchYamlFormVisible.bind(this);
     this.switchAddFormVisible = this.switchAddFormVisible.bind(this);
     this.state = {
-      yamlDate: "",
+      yamlData: "",
       EditFormShow: false,
       AddFormShow: false,
       describeData: {}
@@ -48,7 +48,7 @@ class DeploymentTable extends React.Component {
     this.setState({ AddFormShow: this.state.AddFormShow ? false : true });
   }
 
-  showAddDeploymentModal(){
+  showAddDeploymentModal() {
     this.switchAddFormVisible();
   }
 
@@ -135,7 +135,7 @@ class DeploymentTable extends React.Component {
           Namespace={this.props.Namespace}
           switchAddFormVisible={this.switchAddFormVisible}
         />
-        <AddButton Name="添加" Action={this.showAddDeploymentModal}/>
+        <AddButton Name="添加" Action={this.showAddDeploymentModal} />
         <Table
           className="components-table-demo-nested"
           columns={columns}

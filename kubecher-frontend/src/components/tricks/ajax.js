@@ -26,6 +26,12 @@ async function GetDescribePodByNamespace(namespace, pod) {
   ).then(response => response.text());
 }
 
+async function GetLogsPodByNamespace(namespace, pod) {
+  return await fetch(
+    `/api/pod/logs?namespace=${namespace}&pod=${pod}`
+  ).then(response => response.text());
+}
+
 function PutDeployment(body) {
   return fetch("/api/deployment", fetchOps("PUT", {}, body)).then(response =>
     response.json()
@@ -54,5 +60,6 @@ export {
   PutDeployment,
   GetDescribeDeploymentByNamespace,
   GetDescribePodByNamespace,
-  PostDeploymentByYAML
+  PostDeploymentByYAML,
+  GetLogsPodByNamespace
 };

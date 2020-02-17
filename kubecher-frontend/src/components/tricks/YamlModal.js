@@ -16,6 +16,7 @@ class YamlModal extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.yamlData);
     this.setState({ yaml: this.props.yamlData });
   }
 

@@ -6,6 +6,9 @@ import (
 )
 
 func TestHelloWorld(t *testing.T) {
-	result := GetDescribeDeployments("weave", "weave-scope-app")
-	fmt.Printf("%s",result)
+	result, err := GetLogOfPod("cmdb", "cmdb-8579b8c555-w6nvm")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("%s", result)
 }

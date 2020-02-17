@@ -21,3 +21,20 @@ func GetPodsByNamespaces(c *gin.Context) {
 		c.JSON(200, result)
 	}
 }
+
+func GetDescribePod(c *gin.Context) {
+	namespace := c.Query("namespace")
+	pod := c.Query("pod")
+	result := DescribeResource(namespace, "pods", pod)
+	c.String(200, result)
+}
+
+func GetLogsPod(c *gin.Context) {
+	namespace := c.Query("namespace")
+	pod := c.Query("pod")
+	result, err := GetLogOfPod(namespace, pod)
+	if err != nil {
+		panic(err.Error())
+	}
+	c.String(200, result)
+}

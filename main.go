@@ -21,6 +21,8 @@ func main() {
 		router.PUT("api/deployment", api.UpdateDeployment)
 
 		router.GET("api/pod", api.GetPodsByNamespaces)
+		router.GET("api/pod/describe", api.GetDescribePod)
+		router.GET("api/pod/logs", api.GetLogsPod)
 		//router.DELETE("/someDelete", deleting)
 		//router.PATCH("/somePatch", patching)
 		//router.HEAD("/someHead", head)

@@ -109,7 +109,10 @@ class KubecherLayout extends Component {
               </Sider>
               <Content style={{ padding: "0 24px", minHeight: 280 }}>
                 <Route path="/Pods">
-                  <PodTable PodData={this.state.data} />
+                  <PodTable
+                    PodData={this.state.data}
+                    Namespace={this.state.namespace}
+                  />
                 </Route>
                 <Route path="/Deployment">
                   <DeploymentTable

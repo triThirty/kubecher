@@ -20,6 +20,12 @@ async function GetDescribeDeploymentByNamespace(namespace, deployment) {
   ).then(response => response.text());
 }
 
+async function GetDescribePodByNamespace(namespace, pod) {
+  return await fetch(
+    `/api/pod/describe?namespace=${namespace}&pod=${pod}`
+  ).then(response => response.text());
+}
+
 function PutDeployment(body) {
   return fetch("/api/deployment", fetchOps("PUT", {}, body)).then(response =>
     response.json()
@@ -27,9 +33,10 @@ function PutDeployment(body) {
 }
 
 function PostDeploymentByYAML(body) {
-  return fetch("api/deployment/yaml", fetchOps("POST", {}, body)).then(response =>
-    response.json()
-  );
+  return fetch(
+    "api/deployment/yaml",
+    fetchOps("POST", {}, body)
+  ).then(response => response.json());
 }
 
 function fetchOps(method = "GET", headers = {}, body = {}) {
@@ -46,5 +53,6 @@ export {
   GetDeploymentByNamespace,
   PutDeployment,
   GetDescribeDeploymentByNamespace,
+  GetDescribePodByNamespace,
   PostDeploymentByYAML
 };
